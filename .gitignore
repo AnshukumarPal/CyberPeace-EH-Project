@@ -1,0 +1,14 @@
+# environment
+.env
+
+# python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# database (don't commit real data)
+*.db
+
+# ide stuff
+.vscode/
+.idea/
