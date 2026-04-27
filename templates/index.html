@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus HR — Employee Self Service</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOGIN
+═══════════════════════════════════════════════════════════ -->
+<div id="login-page">
+  <div class="login-wrap">
+
+    <div class="login-brand">
+      <div class="login-brand-logo">N</div>
+      <div class="login-brand-name">Nexus <span>HR Portal</span></div>
+    </div>
+
+    <div class="login-card">
+      <h2>Welcome back</h2>
+      <p>Sign in to access your employee self-service portal</p>
+
+      <div id="login-error" class="login-error"></div>
+
+      <div class="form-group">
+        <label for="f-username">Username</label>
+        <input
+          class="form-control"
+          type="text"
+          id="f-username"
+          placeholder="e.g. arjun.mehta"
+          autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="f-password">Password</label>
+        <input
+          class="form-control"
+          type="password"
+          id="f-password"
+          placeholder="Enter your password"
+          autocomplete="current-password">
+      </div>
+
+      <button id="btn-login" class="btn btn-primary btn-full" onclick="doLogin()">
+        Sign In
+      </button>
+    </div>
+
+    <div class="login-footer">
+      Nexus Corporation Pvt. Ltd. &nbsp;·&nbsp; Internal Use Only<br>
+      For access issues contact IT Support: it-support@nexus-corp.in
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     APPLICATION SHELL
+═══════════════════════════════════════════════════════════ -->
+<div id="app">
+  <div class="shell">
+
+    <!-- ── TOPBAR ──────────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-brand-icon">N</div>
+        <div class="topbar-brand-name">Nexus <span>HR</span></div>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-greeting" id="topbar-greeting"></span>
+        <div class="topbar-user">
+          <div class="topbar-avatar" id="topbar-avatar">AM</div>
+          <div>
+            <div class="topbar-user-name" id="topbar-name">Arjun Mehta</div>
+            <div class="topbar-user-role" id="topbar-role">employee</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+    <aside class="sidebar">
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main Menu</div>
+
+        <button class="nav-item" data-panel="dashboard" onclick="navClick(this)">
+          <!-- home icon -->
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Dashboard
+        </button>
+
+        <button class="nav-item" data-panel="profile" onclick="navClick(this)">
+          <!-- user icon -->
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          My Profile
+        </button>
+
+        <button class="nav-item" data-panel="payslip" onclick="navClick(this)">
+          <!-- file-text icon -->
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Payslip
+        </button>
+
+        <button class="nav-item" data-panel="documents" onclick="navClick(this)">
+          <!-- folder icon -->
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+          </svg>
+          My Documents
+        </button>
+
+        <button class="nav-item" data-panel="leave" onclick="navClick(this)">
+          <!-- calendar icon -->
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8"  y1="2" x2="8"  y2="6"/>
+            <line x1="3"  y1="10" x2="21" y2="10"/>
+          </svg>
+          Leave
+        </button>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Company</div>
+
+        <button class="nav-item" data-panel="directory" onclick="navClick(this)">
+          <!-- users icon -->
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+          Employee Directory
+        </button>
+
+      </div>
+
+    </aside>
+
+    <!-- ── MAIN CONTENT ────────────────────────────────────── -->
+    <main class="main">
+
+
+      <!-- DASHBOARD ──────────────────────────────────────── -->
+      <section class="panel" id="panel-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-sub">Your overview for today</div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <!-- currency icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+              </svg>
+            </div>
+            <div class="stat-label">Latest Net Pay</div>
+            <div class="stat-value" id="dash-pay">—</div>
+            <div class="stat-change" id="dash-pay-period"></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon yellow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="stat-label">Pending Leaves</div>
+            <div class="stat-value" id="dash-leaves">0</div>
+            <div class="stat-change">Awaiting manager approval</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+              </svg>
+            </div>
+            <div class="stat-label">My Documents</div>
+            <div class="stat-value" id="dash-docs">0</div>
+            <div class="stat-change">HR uploaded files</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                <path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <div class="stat-label">Team Size</div>
+            <div class="stat-value">7</div>
+            <div class="stat-change">Active employees</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Company Announcements</span>
+            <span class="text-xs text-muted">Posted by HR &amp; Management</span>
+          </div>
+          <div id="announcements-list">
+            <div class="loading-state">Loading announcements…</div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- PROFILE ────────────────────────────────────────── -->
+      <section class="panel" id="panel-profile">
+        <div class="page-header">
+          <div>
+            <div class="page-title">My Profile</div>
+            <div class="page-sub">Personal information and contact details</div>
+          </div>
+        </div>
+        <div id="profile-box">
+          <div class="loading-state">Loading profile…</div>
+        </div>
+      </section>
+
+
+      <!-- PAYSLIP ────────────────────────────────────────── -->
+      <section class="panel" id="panel-payslip">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Payslip</div>
+            <div class="page-sub">Monthly salary statements</div>
+          </div>
+          <div class="flex gap-8" style="align-items:center">
+            <label class="text-sm" style="font-weight:600;color:var(--text-2)">Select Month:</label>
+            <select
+              id="payslip-selector"
+              class="form-control"
+              style="width:auto;display:none"
+              onchange="onPayslipChange(this)">
+            </select>
+          </div>
+        </div>
+        <div id="payslip-box">
+          <div class="loading-state">Loading payslip…</div>
+        </div>
+      </section>
+
+
+      <!-- DOCUMENTS ──────────────────────────────────────── -->
+      <section class="panel" id="panel-documents">
+        <div class="page-header">
+          <div>
+            <div class="page-title">My Documents</div>
+            <div class="page-sub">HR documents, letters and certificates</div>
+          </div>
+        </div>
+        <div id="documents-box">
+          <div class="loading-state">Loading documents…</div>
+        </div>
+      </section>
+
+
+      <!-- LEAVE ──────────────────────────────────────────── -->
+      <section class="panel" id="panel-leave">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Leave Management</div>
+            <div class="page-sub">Apply for leave and track your requests</div>
+          </div>
+        </div>
+        <div id="leave-box">
+          <div class="loading-state">Loading leave records…</div>
+        </div>
+      </section>
+
+
+      <!-- DIRECTORY ──────────────────────────────────────── -->
+      <section class="panel" id="panel-directory">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Employee Directory</div>
+            <div class="page-sub">All active employees — Nexus Corporation</div>
+          </div>
+        </div>
+        <div id="directory-box">
+          <div class="loading-state">Loading directory…</div>
+        </div>
+      </section>
+
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     LEAVE APPLICATION MODAL
+═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="leave-modal" onclick="if(event.target===this)closeLeaveModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Apply for Leave</div>
+      <button class="modal-close" onclick="closeLeaveModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="lv-type">Leave Type</label>
+        <select class="form-control" id="lv-type">
+          <option>Annual Leave</option>
+          <option>Sick Leave</option>
+          <option>Casual Leave</option>
+          <option>Medical Leave</option>
+          <option>Compensatory Leave</option>
+          <option>Unpaid Leave</option>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="lv-from">From Date</label>
+          <input class="form-control" type="date" id="lv-from">
+        </div>
+        <div class="form-group">
+          <label for="lv-to">To Date</label>
+          <input class="form-control" type="date" id="lv-to">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lv-reason">Reason <span style="color:var(--danger)">*</span></label>
+        <input class="form-control" type="text" id="lv-reason" placeholder="Brief reason for leave">
+        <div class="form-hint">This will be visible to your reporting manager.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeLeaveModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitLeave()">Submit Application</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toast"></div>
+
+
+<!-- External JS — loaded last -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
